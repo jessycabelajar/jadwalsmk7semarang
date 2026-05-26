@@ -1,0 +1,2875 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMKN 7 Semarang — Jadwal Siswa</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #C0392B;
+    --red-dark: #96281B;
+    --red-light: #E74C3C;
+    --gold: #F39C12;
+    --gold-light: #F1C40F;
+    --cream: #FDF6EC;
+    --bg: #F7F3EE;
+    --white: #FFFFFF;
+    --gray-50: #FAFAFA;
+    --gray-100: #F0EFED;
+    --gray-200: #E4E2DF;
+    --gray-400: #9C9893;
+    --gray-600: #625F5A;
+    --gray-800: #2C2A27;
+    --dark: #1A1816;
+    --shadow-sm: 0 1px 4px rgba(0,0,0,0.08);
+    --shadow: 0 4px 20px rgba(0,0,0,0.1);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,0.15);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--gray-800);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── SCREENS ─── */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  /* ─── LOGIN SCREEN ─── */
+  #screen-login {
+    background: var(--dark);
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .login-bg {
+    position: absolute; inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at 20% 50%, rgba(192,57,43,0.3) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(243,156,18,0.2) 0%, transparent 50%);
+  }
+
+  .login-grid {
+    position: absolute; inset: 0;
+    pointer-events: none;
+    background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .login-card {
+    position: relative; z-index: 2;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 48px 40px;
+    width: 100%; max-width: 440px;
+    margin: 20px;
+    animation: fadeUp 0.6s ease;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .school-logo {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 36px;
+  }
+
+  .logo-shield {
+    width: 52px; height: 52px;
+    background: linear-gradient(135deg, var(--red), var(--red-dark));
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 18px; font-weight: 700;
+    color: white;
+    box-shadow: 0 4px 20px rgba(192,57,43,0.5);
+    flex-shrink: 0;
+  }
+
+  .school-name { color: white; }
+  .school-name h1 { font-size: 16px; font-weight: 700; line-height: 1.2; }
+  .school-name p { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+  .login-title {
+    color: white; font-size: 28px; font-weight: 800;
+    margin-bottom: 6px; letter-spacing: -0.5px;
+  }
+  .login-subtitle { color: rgba(255,255,255,0.45); font-size: 14px; margin-bottom: 32px; }
+
+  .form-group { margin-bottom: 20px; }
+  .form-group label {
+    display: block; color: rgba(255,255,255,0.6);
+    font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .form-group input, .form-group select {
+    width: 100%; padding: 14px 16px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius-sm);
+    color: white; font-size: 15px;
+    font-family: inherit;
+    outline: none; transition: all 0.2s;
+  }
+  .form-group input::placeholder { color: rgba(255,255,255,0.25); }
+  .form-group input:focus, .form-group select:focus {
+    border-color: var(--red-light);
+    background: rgba(192,57,43,0.12);
+  }
+  .form-group select option { background: #2C2A27; color: white; }
+
+  .btn-login {
+    width: 100%; padding: 16px;
+    background: linear-gradient(135deg, var(--red-light), var(--red-dark));
+    border: none; border-radius: var(--radius-sm);
+    color: white; font-size: 15px; font-weight: 700;
+    font-family: inherit; cursor: pointer;
+    transition: all 0.2s; margin-top: 8px;
+    box-shadow: 0 4px 20px rgba(192,57,43,0.4);
+  }
+  .btn-login:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 28px rgba(192,57,43,0.5);
+  }
+  .btn-login:active { transform: translateY(0); }
+
+  /* ─── MAIN APP ─── */
+  #screen-app { background: var(--bg); }
+
+  /* Header */
+  .app-header {
+    background: var(--dark);
+    padding: 0 20px;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+  }
+
+  .header-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 0;
+  }
+
+  .header-logo { display: flex; align-items: center; gap: 10px; }
+  .header-logo .logo-mini {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--red), var(--red-dark));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Mono', monospace; font-size: 13px;
+    font-weight: 700; color: white;
+  }
+  .header-logo span { color: white; font-weight: 700; font-size: 14px; }
+
+  .header-user { display: flex; align-items: center; gap: 10px; }
+  .user-avatar {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-weight: 700; font-size: 14px;
+    color: var(--dark); flex-shrink: 0;
+  }
+  .user-info { color: white; }
+  .user-info .name { font-weight: 700; font-size: 13px; line-height: 1; }
+  .user-info .class { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+
+  .btn-logout {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; color: rgba(255,255,255,0.6); padding: 6px 12px;
+    font-size: 12px; cursor: pointer; font-family: inherit;
+    transition: all 0.2s; margin-left: 4px;
+  }
+  .btn-logout:hover { background: rgba(192,57,43,0.3); color: white; }
+
+  /* Nav tabs */
+  .app-nav {
+    display: flex; gap: 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .nav-tab {
+    flex: 1; padding: 12px 6px;
+    background: none; border: none; color: rgba(255,255,255,0.4);
+    font-size: 11px; font-weight: 600; font-family: inherit;
+    cursor: pointer; transition: all 0.2s; text-align: center;
+    border-bottom: 2px solid transparent; letter-spacing: 0.04em;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .nav-tab .tab-icon { font-size: 18px; }
+  .nav-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .nav-tab:hover:not(.active) { color: rgba(255,255,255,0.7); }
+
+  /* Tab content */
+  .tab-content { display: none; flex: 1; }
+  .tab-content.active { display: block; }
+
+  /* ─── TODAY SECTION ─── */
+  .today-section { padding: 20px; }
+
+  .day-selector {
+    display: flex; gap: 8px; margin-bottom: 20px;
+    overflow-x: auto; padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  .day-selector::-webkit-scrollbar { display: none; }
+
+  .day-pill {
+    flex-shrink: 0; padding: 8px 16px;
+    border-radius: 100px; border: 1.5px solid var(--gray-200);
+    background: white; color: var(--gray-600);
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: all 0.2s; font-family: inherit;
+  }
+  .day-pill.active {
+    background: var(--red); border-color: var(--red);
+    color: white; box-shadow: 0 4px 12px rgba(192,57,43,0.3);
+  }
+  .day-pill:hover:not(.active) { border-color: var(--gray-400); }
+
+  /* Date Banner */
+  .date-banner {
+    background: linear-gradient(135deg, var(--red), var(--red-dark));
+    border-radius: var(--radius); padding: 20px;
+    color: white; margin-bottom: 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 6px 24px rgba(192,57,43,0.3);
+  }
+  .date-banner .date-main { font-size: 28px; font-weight: 800; letter-spacing: -1px; }
+  .date-banner .date-sub { font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+  .date-banner .lesson-count {
+    background: rgba(255,255,255,0.15); border-radius: 12px;
+    padding: 10px 16px; text-align: center;
+  }
+  .date-banner .lesson-count span { display: block; }
+  .date-banner .lesson-count .num { font-size: 24px; font-weight: 800; }
+  .date-banner .lesson-count .lbl { font-size: 11px; opacity: 0.75; }
+
+  /* Schedule cards */
+  .schedule-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .schedule-card {
+    background: white; border-radius: var(--radius-sm);
+    padding: 16px; display: flex; gap: 14px; align-items: flex-start;
+    box-shadow: var(--shadow-sm); border: 1px solid var(--gray-100);
+    transition: all 0.2s; position: relative; overflow: hidden;
+  }
+  .schedule-card:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+
+  .schedule-card.active-class {
+    border-color: var(--red-light);
+    box-shadow: 0 0 0 2px rgba(192,57,43,0.15), var(--shadow);
+  }
+  .schedule-card.active-class::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+    background: linear-gradient(to bottom, var(--red-light), var(--red));
+  }
+  .schedule-card.done { opacity: 0.6; }
+  .schedule-card.done .scard-time { text-decoration: line-through; }
+
+  .scard-time-block { flex-shrink: 0; text-align: right; min-width: 58px; }
+  .scard-start { font-family: 'Space Mono', monospace; font-size: 14px; font-weight: 700; color: var(--gray-800); }
+  .scard-end { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+
+  .scard-divider { width: 1px; background: var(--gray-200); align-self: stretch; flex-shrink: 0; }
+
+  .scard-body { flex: 1; }
+  .scard-subject { font-size: 15px; font-weight: 700; color: var(--gray-800); margin-bottom: 4px; }
+  .scard-meta { font-size: 12px; color: var(--gray-400); }
+  .scard-meta span { margin-right: 10px; }
+
+  .scard-badge {
+    flex-shrink: 0; padding: 4px 10px; border-radius: 100px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .badge-ongoing { background: rgba(192,57,43,0.12); color: var(--red); }
+  .badge-next { background: rgba(243,156,18,0.15); color: #D68910; }
+  .badge-done { background: var(--gray-100); color: var(--gray-400); }
+
+  .empty-state {
+    text-align: center; padding: 48px 20px;
+    color: var(--gray-400);
+  }
+  .empty-state .emoji { font-size: 48px; margin-bottom: 12px; }
+  .empty-state p { font-size: 15px; }
+
+  /* ─── SCHEDULE TAB ─── */
+  .schedule-section { padding: 20px; }
+
+  .section-title {
+    font-size: 18px; font-weight: 800; color: var(--gray-800);
+    margin-bottom: 16px; letter-spacing: -0.3px;
+  }
+  .section-title span { color: var(--red); }
+
+  .week-grid { display: flex; flex-direction: column; gap: 12px; }
+
+  .day-card {
+    background: white; border-radius: var(--radius);
+    overflow: hidden; box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-100);
+  }
+  .day-card-header {
+    padding: 14px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .day-card-header:hover { background: var(--gray-50); }
+  .day-card-header.today-header { background: linear-gradient(135deg, var(--red), var(--red-dark)); }
+  .day-card-header.today-header .day-name,
+  .day-card-header.today-header .lesson-badge { color: white; }
+  .day-card-header.today-header .lesson-badge { background: rgba(255,255,255,0.2); }
+
+  .day-name { font-size: 14px; font-weight: 700; }
+  .lesson-badge {
+    background: var(--gray-100); color: var(--gray-600);
+    font-size: 11px; font-weight: 600; padding: 3px 10px;
+    border-radius: 100px;
+  }
+
+  .day-card-body { padding: 0 16px 16px; }
+
+  .mini-schedule { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+  .mini-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 12px; border-radius: 8px; background: var(--gray-50);
+  }
+  .mini-time {
+    font-family: 'Space Mono', monospace; font-size: 11px;
+    color: var(--gray-400); width: 80px; flex-shrink: 0;
+  }
+  .mini-subject { font-size: 13px; font-weight: 600; color: var(--gray-800); flex: 1; }
+  .mini-room { font-size: 11px; color: var(--gray-400); }
+
+  /* ─── REMINDER TAB ─── */
+  .reminder-section { padding: 20px; }
+
+  .reminder-form {
+    background: white; border-radius: var(--radius);
+    padding: 20px; margin-bottom: 24px;
+    box-shadow: var(--shadow-sm); border: 1px solid var(--gray-100);
+  }
+  .reminder-form h3 {
+    font-size: 15px; font-weight: 700; margin-bottom: 16px; color: var(--gray-800);
+  }
+
+  .form-row { display: flex; gap: 12px; }
+  .form-row .form-field { flex: 1; }
+
+  .form-field { margin-bottom: 14px; }
+  .form-field label {
+    display: block; font-size: 11px; font-weight: 700;
+    color: var(--gray-400); text-transform: uppercase;
+    letter-spacing: 0.08em; margin-bottom: 6px;
+  }
+  .form-field input, .form-field select, .form-field textarea {
+    width: 100%; padding: 11px 14px;
+    border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm);
+    font-size: 14px; font-family: inherit; color: var(--gray-800);
+    background: var(--gray-50); outline: none; transition: all 0.2s;
+  }
+  .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
+    border-color: var(--red-light); background: white;
+    box-shadow: 0 0 0 3px rgba(192,57,43,0.1);
+  }
+  .form-field textarea { resize: vertical; min-height: 72px; }
+
+  .btn-add {
+    width: 100%; padding: 13px;
+    background: linear-gradient(135deg, var(--red-light), var(--red));
+    border: none; border-radius: var(--radius-sm);
+    color: white; font-size: 14px; font-weight: 700;
+    font-family: inherit; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-add:hover { box-shadow: 0 6px 20px rgba(192,57,43,0.35); transform: translateY(-1px); }
+
+  /* Reminder list */
+  .reminders-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .reminder-card {
+    background: white; border-radius: var(--radius-sm);
+    padding: 16px; display: flex; gap: 14px; align-items: flex-start;
+    box-shadow: var(--shadow-sm); border: 1px solid var(--gray-100);
+    transition: all 0.2s;
+  }
+  .reminder-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .icon-pelajaran { background: rgba(192,57,43,0.1); }
+  .icon-tugas { background: rgba(243,156,18,0.15); }
+  .icon-ujian { background: rgba(52,152,219,0.12); }
+  .icon-lainnya { background: var(--gray-100); }
+
+  .reminder-body { flex: 1; }
+  .reminder-title { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+  .reminder-desc { font-size: 12px; color: var(--gray-400); margin-bottom: 6px; }
+  .reminder-time-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--gray-100); border-radius: 6px;
+    padding: 3px 8px; font-size: 11px; color: var(--gray-600); font-weight: 600;
+  }
+
+  .btn-delete-reminder {
+    background: none; border: none; cursor: pointer;
+    color: var(--gray-400); font-size: 16px; padding: 4px;
+    transition: color 0.2s;
+  }
+  .btn-delete-reminder:hover { color: var(--red); }
+
+  /* ─── TOAST NOTIFICATION ─── */
+  .toast-container {
+    position: fixed; top: 20px; right: 20px; z-index: 9999;
+    display: flex; flex-direction: column; gap: 10px; max-width: 320px;
+  }
+  .toast {
+    background: var(--dark); color: white;
+    border-radius: 14px; padding: 14px 16px;
+    display: flex; gap: 12px; align-items: flex-start;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    border-left: 4px solid var(--red);
+    animation: slideIn 0.3s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(60px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .toast.hide { animation: slideOut 0.3s ease forwards; }
+  @keyframes slideOut {
+    to { opacity: 0; transform: translateX(60px); }
+  }
+  .toast-icon { font-size: 22px; flex-shrink: 0; }
+  .toast-text .toast-title { font-weight: 700; font-size: 13px; }
+  .toast-text .toast-body { font-size: 12px; color: rgba(255,255,255,0.65); margin-top: 2px; }
+
+  /* ─── PERMISSION BANNER ─── */
+  .notif-banner {
+    background: linear-gradient(135deg, rgba(243,156,18,0.15), rgba(243,156,18,0.05));
+    border: 1.5px solid rgba(243,156,18,0.4);
+    border-radius: var(--radius-sm); padding: 14px 16px;
+    display: flex; gap: 12px; align-items: center;
+    margin-bottom: 16px;
+  }
+  .notif-banner .nb-icon { font-size: 24px; }
+  .notif-banner .nb-text { flex: 1; font-size: 13px; color: var(--gray-800); }
+  .notif-banner .nb-text strong { display: block; margin-bottom: 2px; }
+  .btn-enable-notif {
+    background: var(--gold); border: none; border-radius: 8px;
+    padding: 8px 14px; font-size: 12px; font-weight: 700;
+    font-family: inherit; cursor: pointer; color: var(--dark); flex-shrink: 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 400px) {
+    .login-card { padding: 36px 24px; }
+    .form-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── SCREEN: LOGIN ─── -->
+<div id="screen-login" class="screen active">
+  <div class="login-bg"></div>
+  <div class="login-grid"></div>
+  <div class="login-card">
+    <div class="school-logo">
+      <div class="logo-shield">N7</div>
+      <div class="school-name">
+        <h1>SMK Negeri 7 Semarang</h1>
+        <p>Sistem Jadwal Siswa</p>
+      </div>
+    </div>
+    <h2 class="login-title">Selamat Datang</h2>
+    <p class="login-subtitle">Masuk untuk melihat jadwal & pengingat kamu</p>
+
+    <div class="form-group">
+      <label>Nama Lengkap</label>
+      <input type="text" id="inp-nama" placeholder="contoh: Ahmad Rizky Pratama" />
+    </div>
+    <div class="form-group">
+      <label>NIS (Nomor Induk Siswa)</label>
+      <input type="text" id="inp-nis" placeholder="contoh: 2324001234" />
+    </div>
+    <div class="form-group">
+      <label>Kelas</label>
+      <select id="inp-kelas">
+        <option value="">— Pilih Kelas —</option>
+        <option value="X PPLG 1">X PPLG 1</option>
+        <option value="X PPLG 2">X PPLG 2</option>
+        <option value="X PPLG 3">X PPLG 3</option>
+        <option value="XI SIJA 1">XI SIJA 1</option>
+        <option value="XI SIJA 2">XI SIJA 2</option>
+        <option value="XI SIJA 3">XI SIJA 3</option>
+        <option value="XII SIJA 1">XII SIJA 1</option>
+        <option value="XII SIJA 2">XII SIJA 2</option>
+        <option value="XII SIJA 3">XII SIJA 3</option>
+        <option value="X KBPS 1">X KBPS 1</option>
+        <option value="X KBPS 2">X KBPS 2</option>
+        <option value="XI KJIJ 1">XI KJIJ 1</option>
+        <option value="XI KJIJ 2">XI KJIJ 2</option>
+        <option value="XII KJIJ 1">XII KJIJ 1</option>
+        <option value="XII KJIJ 2">XII KJIJ 2</option>
+        <option value="X TKP 1">X TKP 1</option>
+        <option value="X TKP 2">X TKP 2</option>
+        <option value="XI KGS 1">XI KGS 1</option>
+        <option value="XI KGS 2">XI KGS 2</option>
+        <option value="XII KGS 1">XII KGS 1</option>
+        <option value="XII KGS 2">XII KGS 2</option>
+        <option value="X TKL 1">X TKL 1</option>
+        <option value="X TKL 2">X TKL 2</option>
+        <option value="XI TITL 1">XI TITL 1</option>
+        <option value="XI TITL 2">XI TITL 2</option>
+        <option value="XII TITL 1">XII TITL 1</option>
+        <option value="XII TITL 2">XII TITL 2</option>
+        <option value="X TE 1">X TE 1</option>
+        <option value="X TE 2">X TE 2</option>
+        <option value="X TE 3">X TE 3</option>
+        <option value="X TE 4">X TE 4</option>
+        <option value="X TE 5">X TE 5</option>
+        <option value="X TE 6">X TE 6</option>
+        <option value="XI TEK 1">XI TEK 1</option>
+        <option value="XI TEK 2">XI TEK 2</option>
+        <option value="XI TEK 3">XI TEK 3</option>
+        <option value="XI TME 1">XI TME 1</option>
+        <option value="XI TME 2">XI TME 2</option>
+        <option value="XI TME 3">XI TME 3</option>
+        <option value="X TO 1">X TO 1</option>
+        <option value="X TO 2">X TO 2</option>
+        <option value="X TO 3">X TO 3</option>
+        <option value="XI TKR 1">XI TKR 1</option>
+        <option value="XI TKR 2">XI TKR 2</option>
+        <option value="XI TKR 3">XI TKR 3</option>
+        <option value="XII TKR 1">XII TKR 1</option>
+        <option value="XII TKR 2">XII TKR 2</option>
+        <option value="XII TKR 3">XII TKR 3</option>
+        <option value="X TPFL 1">X TPFL 1</option>
+        <option value="X TPFL 2">X TPFL 2</option>
+        <option value="XI TPFL 1">XI TPFL 1</option>
+        <option value="XI TPFL 2">XI TPFL 2</option>
+        <option value="XII TPFL 1">XII TPFL 1</option>
+        <option value="XII TPFL 2">XII TPFL 2</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Jurusan / Kompetensi Keahlian</label>
+      <select id="inp-jurusan">
+        <option value="">— Pilih Jurusan —</option>
+        <option value="PPLG/SIJA">Sistem Informasi dan Jaringan (PPLG/SIJA)</option>
+        <option value="KBPS/KJIJ">Kontruksi Jalan dan Irigasi Jembatan</option>
+        <option value="TKP/KGS">Kontruksi Gedung Sanitasi</option>
+        <option value="TKL/TITL">Teknik Instalasi Ketenagalistrikan</option>
+        <option value="TE">Teknik Elektronika</option>
+        <option value="TEK">Teknik Elektronika dan komunikasi</option>
+        <option value="TME">Teknik Mekatronika</option>
+        <option value="TO/TKR">Teknik Otomotif / Teknik Kendaraan Ringan</option>
+      </select>
+    </div>
+    <button class="btn-login" onclick="doLogin()">Masuk ke Jadwal Saya →</button>
+  </div>
+</div>
+
+<!-- ─── SCREEN: APP ─── -->
+<div id="screen-app" class="screen">
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-top">
+      <div class="header-logo">
+        <div class="logo-mini">N7</div>
+        <span>SMKN 7 Semarang</span>
+      </div>
+      <div class="header-user">
+        <div class="user-avatar" id="user-avatar">A</div>
+        <div class="user-info">
+          <div class="name" id="disp-name">Nama Siswa</div>
+          <div class="class" id="disp-class">Kelas — Jurusan</div>
+        </div>
+        <button class="btn-logout" onclick="doLogout()">Keluar</button>
+      </div>
+    </div>
+    <nav class="app-nav">
+      <button class="nav-tab active" onclick="switchTab('today',this)">
+        <span class="tab-icon">📅</span> Hari Ini
+      </button>
+      <button class="nav-tab" onclick="switchTab('schedule',this)">
+        <span class="tab-icon">📋</span> Jadwal
+      </button>
+      <button class="nav-tab" onclick="switchTab('reminder',this)">
+        <span class="tab-icon">🔔</span> Pengingat
+      </button>
+    </nav>
+  </header>
+
+  <!-- TAB: TODAY -->
+  <div id="tab-today" class="tab-content active">
+    <div class="today-section">
+      <div class="day-selector" id="day-selector"></div>
+
+      <div class="date-banner">
+        <div>
+          <div class="date-main" id="banner-day">Senin</div>
+          <div class="date-sub" id="banner-date">13 Mei 2026</div>
+        </div>
+        <div class="lesson-count">
+          <span class="num" id="banner-count">0</span>
+          <span class="lbl">Pelajaran</span>
+        </div>
+      </div>
+
+      <div class="schedule-list" id="today-list"></div>
+    </div>
+  </div>
+
+  <!-- TAB: SCHEDULE -->
+  <div id="tab-schedule" class="tab-content">
+    <div class="schedule-section">
+      <div class="section-title">Jadwal <span>Mingguan</span></div>
+      <div class="week-grid" id="week-grid"></div>
+    </div>
+  </div>
+
+  <!-- TAB: REMINDER -->
+  <div id="tab-reminder" class="tab-content">
+    <div class="reminder-section">
+      <div class="notif-banner" id="notif-banner" style="display:none">
+        <div class="nb-icon">🔔</div>
+        <div class="nb-text">
+          <strong>Aktifkan Notifikasi Browser</strong>
+          Agar pengingat muncul otomatis sesuai jadwal
+        </div>
+        <button class="btn-enable-notif" onclick="requestNotifPermission()">Aktifkan</button>
+      </div>
+
+      <div class="reminder-form">
+        <h3>➕ Tambah Pengingat Baru</h3>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Judul Pengingat</label>
+            <input type="text" id="rem-title" placeholder="cth: Ujian Matematika" />
+          </div>
+          <div class="form-field">
+            <label>Kategori</label>
+            <select id="rem-type">
+              <option value="pelajaran">📚 Pelajaran</option>
+              <option value="tugas">📝 Tugas</option>
+              <option value="ujian">🎯 Ujian</option>
+              <option value="lainnya">🔖 Lainnya</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Tanggal</label>
+            <input type="date" id="rem-date" />
+          </div>
+          <div class="form-field">
+            <label>Waktu</label>
+            <input type="time" id="rem-time" />
+          </div>
+        </div>
+        <div class="form-field">
+          <label>Keterangan (opsional)</label>
+          <textarea id="rem-desc" placeholder="Tambahkan catatan..."></textarea>
+        </div>
+        <button class="btn-add" onclick="addReminder()">Simpan Pengingat</button>
+      </div>
+
+      <div class="section-title">Pengingat <span>Aktif</span></div>
+      <div class="reminders-list" id="reminders-list"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+// ─── DATA: JADWAL PER JURUSAN & KELAS ───
+// Sesuaikan jadwal di bawah ini dengan jadwal resmi SMKN 7 Semarang
+const JAM = {
+  1:  { s: '07:00', e: '07:45' },
+  2:  { s: '07:45', e: '08:30' },
+  3:  { s: '08:30', e: '09:15' },
+  4:  { s: '09:15', e: '10:00' },
+  5:  { s: '10:15', e: '11:00' },
+  6:  { s: '11:00', e: '11:45' },
+  7:  { s: '12:30', e: '13:15' },
+  8:  { s: '13:15', e: '14:00' },
+  9:  { s: '14:00', e: '14:45' },
+  10: { s: '14:45', e: '15:30' },
+};
+
+// Template jadwal per jurusan (contoh; sesuaikan dengan jadwal asli)
+const JADWAL = {
+  "PPLG" : {
+    "X PPLG 1" : {
+      Senin:  [
+        {j:[1,2],m:'KKA PPLG',r:'Hard',g:'JOESTI'},
+        {j:[3,4],m:'DPK PPLG',r:'Hard',g:'JOESTI'},
+        {j:[5,6],m:'DPK PPLG',r:'Hard',g:'AS'},
+        {j:[7],  m:'IPAS',    r:'Hard',g:'ROH'},
+        {j:[9],  m:'Ing',     r:'Hard',g:'LUT'},
+        {j:[10], m:'Ing',     r:'Hard',g:'LUT'},
+      ],
+      Selasa: [
+        {j:[1,2],  m:'IPAS',       r:'Hard', g:'ROH'},
+        {j:[3,4],  m:'Matematika', r:'Hard', g:'WINDI'},
+        {j:[5,6],  m:'DPK PPLG',  r:'Hard', g:'HARI'},
+        {j:[7],    m:'DPK PPLG',  r:'Hard', g:'HARI'},
+        {j:[8,9,10],m:'INFOR PPLG',r:'Hard',g:'HARI'},
+      ],
+      Rabu: [
+        {j:[1,2,3,4],m:'DPK PPLG',  r:'Hard', g:'AS'},
+        {j:[4],      m:'BK',         r:'',     g:'YOLA'},
+        {j:[5,6],    m:'Bhs. Indonesia',r:'R20',g:'KISMI'},
+        {j:[7,8],    m:'Sejarah',    r:'R20',  g:'MONA'},
+        {j:[9,10],   m:'Ing',        r:'R20',  g:'LUT'},
+      ],
+      Kamis: [
+        {j:[1,2],  m:'Bhs. Indonesia',r:'R20',g:'KISMI'},
+        {j:[3,4],  m:'PJOK',         r:'R20',g:'BAM'},
+        {j:[5],    m:'PJOK',         r:'R20',g:'BAM'},
+        {j:[6],    m:'IPAS',         r:'R20',g:'ROH'},
+        {j:[7],    m:'IPAS',         r:'R20',g:'ROH'},
+        {j:[8,9,10],m:'Agama',       r:'R20',g:'ATIF'},
+      ],
+      Jumat: [
+        {j:[1,2],m:'Seni Budaya',  r:'R20',g:'ENY'},
+        {j:[3,4],m:'PKN',          r:'R20',g:'SADAR'},
+        {j:[5,6],m:'Matematika',   r:'R20',g:'WINDI'},
+        {j:[7,8],m:'Bhs. Jawa',    r:'R20',g:'PUJO'},
+      ],
+    },
+     "X PPLG 2" : {
+      Senin:  [
+        {j:[1,2,3],m:'Agama',r:'R20',g:'ATIF'},
+        {j:[4,5,6],m:'IPAS',r:'R20',g:'ROH'},
+        {j:[7,8],m:'Seni Budaya',r:'R20',g:'ENY'},
+        {j:[9,10],  m:'Matematika',    r:'R20',g:'WINDI'},
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bhs. Indonesia',r:'R20',g:'KISMI'},
+        {j:[3,4,5],m:'IPAS',r:'R20',g:'ROH'},
+        {j:[6,8],m:'PJOK',r:'R20',g:'BAM'},
+        {j:[9,10],  m:'Sejarah',    r:'R20',g:'MONA'},
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Bhs. Jawa',r:'R20',g:'PUJO'},
+        {j:[3,4],m:'Bhs. Indonesia',r:'R20',g:'KISMI'},
+        {j:[5,6,7],m:'DPK PPLG',r:'Hard',g:'HARI'},
+        {j:[8,9,10],m:'INFOR PPLG',r:'Hard',g:'HARI'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'DPK PPLG',r:'ICT',g:'AS'},
+        {j:[3,4],m:'Matematika',r:'iCT',g:'WINDI'},
+        {j:[5,6,7,8],m:'Bhs. Inggris',r:'ICT',g:'LUT'},
+        {j:[9,10],m:'PKN',r:'ICT',g:'SADAR'}
+      ],
+      Jumat:  [
+        {j:[1],m:'BK',r:'Hard',g:'YOLA'},
+        {j:[2,3],m:'KKA PPLG',r:'Hard',g:'JOESTI'},
+        {j:[4,5],m:'DPK PPLG',r:'Hard',g:'JOESTI'},
+        {j:[6,7],m:'DPK PPLG',r:'Hard',g:'AS'},
+      ]
+    },
+     "X PPLG 3" : {
+      Senin:  [
+        {j:[1,2,3],m:'DPK PPLG',r:'Programming',g:'HARI'},
+        {j:[4,5,6],m:'DPK PPLG',r:'Programming',g:'HARI'},
+        {j:[7,8],m:'SEJARAH',r:'Programming',g:'MONA'},
+        {j:[9,10],m:'Bhs. Indonesia',r:'Programming',g:'KISMI'},
+      ],
+      Selasa: [
+        {j:[1,2],m:'Matematika',r:'ICT',g:'WINDI'},
+        {j:[3,4],m:'Bhs. Inggris',r:'ICT',g:'LUT'},
+        {j:[5],m:'BK',r:'ICT',g:'YOLA'},
+        {j:[6,7,8,9,10],m:'DPK PPLG',r:'ICT',g:'AS'},
+      ],
+      Rabu:   [
+        {j:[1,2],m:'DPK PPLG',r:'Networking',g:'JOESTI'},
+        {j:[3,4],m:'KKA PPLG',r:'Networking',g:'JOESTI'},
+        {j:[5,6,7],m:'IPAS',r:'R21',g:'ROH'},
+        {j:[8,9,10],m:'PJOK',r:'R21',g:'BAM'},
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bhs. Jawa',r:'R21',g:'PUJO'},
+        {j:[3,4],m:'Seni Budaya',r:'R21',g:'ENY'},
+        {j:[5,6],m:'PKN',r:'R21',g:'SADAR'},
+        {j:[7,8],m:'Matematika',r:'R21',g:'WINDI'},
+        {j:[9,10],m:'Bhs. Indonesia',r:'R21',g:'KISMI'}
+      ],
+      Jumat:  [
+        {j:[1,2,3],m:'Agama',r:'R21',g:'ATIF'},
+        {j:[4,5],m:'Bhs. Inggris',r:'R21',g:'LUT'},
+        {j:[6,7,8],m:'IPAS',r:'R21',g:'ROH'}
+      ],
+    },
+  },
+
+    "SIJA" : {
+    "XI SIJA 1" : {
+      Senin:  [
+        {j:[1,2],m:'KIK',r:'R22',g:'YUL'},
+        {j:[2,4],m:'Bhs. Inggris',r:'R22',g:'LUT'},
+        {j:[5,6],m:'Bhs. Jawa',r:'RK2',g:'PUJO'},
+        {j:[7,8],m:'PKN',r:'R22',g:'DIAH'},
+        {j:[9,10],m:'Sejarah',r:'R22',g:'MUTIA'}
+      ],
+      Selasa: [
+        {j:[1,2,3],m:'AGAMA',r:'R22',g:'MOZA'},
+        {j:[4,5],m:'PJOK',r:'R22',g:'BAM'},
+        {j:[6,7],m:'Bhs. Inggris',r:'RK2',g:'LUT'},
+        {j:[8,9,10],m:'Bhs. Indonesia',r:'R22',g:'ABDUL'}
+      ],
+      Rabu:   [
+        {j:[1,2,3],m:'Matematika',r:'R22',g:'WINDI'},
+        {j:[4,5,6,7],m:'KK SIJA',r:'ICT',g:'INUNG'},
+        {j:[8],m:'BK',r:'ICT',g:'YOLA'},
+        {j:[9,10],m:'KIK SIJA',r:'ICT',g:'AS'},
+      ],
+      Kamis:  [
+        {j:[1,2,3,4,5,6],m:'KK SIJA',r:'Programming',g:'PUR'},
+        {j:[7,8,9,10],m:'KK SIJA',r:'Programming',g:'ISNA'},
+      ],
+    
+      Jumat:  [
+        {j:[1,2,3,4],m:'Jpn',r:'Networking',g:'KIKI'},
+        {j:[5,6,7,8],m:'KK SIJA',r:'Networking',g:'NISA'},
+      ],
+    }
+    },
+    "XI SIJA 2" : {
+    Senin:  [
+      {j:[1,2,3],m:'Administrasi Sistem Jaringan',r:'Lab Net'},
+      {j:[4,5],m:'Matematika',r:'RK2'},{j:[6,7],m:'Bahasa Inggris',r:'RK2'},
+      {j:[8],m:'PKN',r:'RK2'}
+    ],
+    Selasa: [
+      {j:[1,2,3],m:'Teknologi Layanan Jaringan',r:'Lab Net'},
+      {j:[4,5],m:'Keamanan Jaringan',r:'Lab Net'},
+      {j:[6,7],m:'Agama',r:'RK2'}
+    ],
+    Rabu:   [
+      {j:[1,2],m:'Matematika',r:'RK2'},
+      {j:[3,4,5],m:'Rancang Bangun Jaringan',r:'Lab Net'},
+      {j:[6,7],m:'Bahasa Indonesia',r:'RK2'},
+      {j:[8],m:'BK',r:'RK2'}
+    ],
+    Kamis:  [
+      {j:[1,2,3],m:'Administrasi Infrastruktur Jaringan',r:'Lab Net'},
+      {j:[4,5],m:'PJOK',r:'Lapangan'},
+      {j:[6,7],m:'Bahasa Inggris',r:'RK2'}
+    ],
+    Jumat:  [
+      {j:[1,2],m:'PKN',r:'RK2'},
+      {j:[3,4],m:'Projek Kreatif',r:'Lab Net'},
+      {j:[5,6],m:'Kewirausahaan',r:'RK2'}
+    ],
+    },
+    "XI SIJA 3" : {
+    Senin:  [
+      {j:[1,2,3],m:'Administrasi Sistem Jaringan',r:'Lab Net'},
+      {j:[4,5],m:'Matematika',r:'RK2'},
+      {j:[6,7],m:'Bahasa Inggris',r:'RK2'},
+      {j:[8],m:'PKN',r:'RK2'}
+    ],
+    Selasa: [
+      {j:[1,2,3],m:'Teknologi Layanan Jaringan',r:'Lab Net'},
+      {j:[4,5],m:'Keamanan Jaringan',r:'Lab Net'},
+      {j:[6,7],m:'Agama',r:'RK2'}
+    ],
+    Rabu:   [
+      {j:[1,2],m:'Matematika',r:'RK2'},
+      {j:[3,4,5],m:'Rancang Bangun Jaringan',r:'Lab Net'},
+      {j:[6,7],m:'Bahasa Indonesia',r:'RK2'},
+      {j:[8],m:'BK',r:'RK2'}
+    ],
+    Kamis:  [
+      {j:[1,2,3],m:'Administrasi Infrastruktur Jaringan',r:'Lab Net'},
+      {j:[4,5],m:'PJOK',r:'Lapangan'},
+      {j:[6,7],m:'Bahasa Inggris',r:'RK2'}
+    ],
+    Jumat:  [
+      {j:[1,2],m:'PKN',r:'RK2'},
+      {j:[3,4],m:'Projek Kreatif',r:'Lab Net'},
+      {j:[5,6],m:'Kewirausahaan',r:'RK2'}
+    ],
+    "XII SIJA 1": {
+      Senin:  [
+        {j:[1,2,3],m:'Administrasi Sistem Jaringan',r:'Lab Net'},
+        {j:[4,5],m:'Bahasa Inggris',r:'RK3'},
+        {j:[6,7],m:'Matematika',r:'RK3'}
+      ],
+      Selasa: [
+        {j:[1,2,3],m:'PKL / Praktik',r:'Industri'},
+        {j:[4,5],m:'Kewirausahaan',r:'RK3'},
+        {j:[6,7],m:'Agama',r:'RK3'}
+      ],
+      Rabu:   [
+        {j:[1,2,3],m:'Perancangan WAN',r:'Lab Net'},
+        {j:[4,5],m:'Bahasa Indonesia',r:'RK3'},
+        {j:[6],m:'BK',r:'RK3'}
+      ],
+      Kamis:  [
+        {j:[1,2,3],m:'Keamanan Jaringan',r:'Lab Net'},
+        {j:[4,5],m:'PJOK',r:'Lapangan'},
+        {j:[6,7],m:'Matematika',r:'RK3'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK3'},
+        {j:[3,4],m:'Bahasa Inggris',r:'RK3'},
+        {j:[5,6],m:'Projek Kreatif',r:'Lab Net'}
+      ],
+    },
+    "XII SIJA 2": {
+      Senin:  [
+        {j:[1,2,3],m:'Administrasi Sistem Jaringan',r:'Lab Net'},
+        {j:[4,5],m:'Bahasa Inggris',r:'RK3'},
+        {j:[6,7],m:'Matematika',r:'RK3'}
+      ],
+      Selasa: [
+        {j:[1,2,3],m:'PKL / Praktik',r:'Industri'},
+        {j:[4,5],m:'Kewirausahaan',r:'RK3'},
+        {j:[6,7],m:'Agama',r:'RK3'}
+      ],
+      Rabu:   [
+        {j:[1,2,3],m:'Perancangan WAN',r:'Lab Net'},
+        {j:[4,5],m:'Bahasa Indonesia',r:'RK3'},
+        {j:[6],m:'BK',r:'RK3'}
+      ],
+      Kamis:  [
+        {j:[1,2,3],m:'Keamanan Jaringan',r:'Lab Net'},
+        {j:[4,5],m:'PJOK',r:'Lapangan'},
+        {j:[6,7],m:'Matematika',r:'RK3'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK3'},
+        {j:[3,4],m:'Bahasa Inggris',r:'RK3'},
+        {j:[5,6],m:'Projek Kreatif',r:'Lab Net'}
+      ],
+    }
+  },
+  KBPS : {
+    "X KPBS 1" : {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4],m:'Dasar Pemrograman',r:'Lab RPL'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK4'},
+        {j:[7,8],m:'Sistem Komputer',r:'Lab RPL'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK4'},
+        {j:[3,4,5],m:'Algoritma & Pemrograman',r:'Lab RPL'},
+        {j:[6,7],m:'Agama',r:'RK4'},
+        {j:[8],m:'BK',r:'RK4'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4,5],m:'Pemrograman Web Dasar',r:'Lab RPL'},
+        {j:[6,7],m:'Seni Budaya',r:'RK4'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK4'},
+        {j:[3,4],m:'IPA Terapan',r:'RK4'},
+        {j:[5,6,7],m:'Basis Data',r:'Lab RPL'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK4'},
+        {j:[3,4],m:'Projek Kreatif',r:'Lab RPL'},
+        {j:[5,6],m:'Matematika',r:'RK4'}
+      ],
+    },
+    "X KPBS 2" : {
+       Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4],m:'Dasar Pemrograman',r:'Lab RPL'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK4'},
+        {j:[7,8],m:'Sistem Komputer',r:'Lab RPL'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK4'},
+        {j:[3,4,5],m:'Algoritma & Pemrograman',r:'Lab RPL'},
+        {j:[6,7],m:'Agama',r:'RK4'},
+        {j:[8],m:'BK',r:'RK4'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4,5],m:'Pemrograman Web Dasar',r:'Lab RPL'},
+        {j:[6,7],m:'Seni Budaya',r:'RK4'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK4'},
+        {j:[3,4],m:'IPA Terapan',r:'RK4'},
+        {j:[5,6,7],m:'Basis Data',r:'Lab RPL'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK4'},
+        {j:[3,4],m:'Projek Kreatif',r:'Lab RPL'},
+        {j:[5,6],m:'Matematika',r:'RK4'}
+      ],
+    },
+    KJIJ: {
+    "XI KJIJ 1" : {
+       Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4],m:'Dasar Pemrograman',r:'Lab RPL'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK4'},
+        {j:[7,8],m:'Sistem Komputer',r:'Lab RPL'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK4'},
+        {j:[3,4,5],m:'Algoritma & Pemrograman',r:'Lab RPL'},
+        {j:[6,7],m:'Agama',r:'RK4'},
+        {j:[8],m:'BK',r:'RK4'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4,5],m:'Pemrograman Web Dasar',r:'Lab RPL'},
+        {j:[6,7],m:'Seni Budaya',r:'RK4'}
+      ],
+    },
+     "XI KJIJ 2" : {
+       Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4],m:'Dasar Pemrograman',r:'Lab RPL'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK4'},
+        {j:[7,8],m:'Sistem Komputer',r:'Lab RPL'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK4'},
+        {j:[3,4,5],m:'Algoritma & Pemrograman',r:'Lab RPL'},
+        {j:[6,7],m:'Agama',r:'RK4'},
+        {j:[8],m:'BK',r:'RK4'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4,5],m:'Pemrograman Web Dasar',r:'Lab RPL'},
+        {j:[6,7],m:'Seni Budaya',r:'RK4'}
+      ],
+    },
+
+      "XII KJIJ 1" : {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4],m:'Dasar Pemrograman',r:'Lab RPL'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK4'},
+        {j:[7,8],m:'Sistem Komputer',r:'Lab RPL'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK4'},
+        {j:[3,4,5],m:'Algoritma & Pemrograman',r:'Lab RPL'},
+        {j:[6,7],m:'Agama',r:'RK4'},
+        {j:[8],m:'BK',r:'RK4'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4,5],m:'Pemrograman Web Dasar',r:'Lab RPL'},
+        {j:[6,7],m:'Seni Budaya',r:'RK4'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK4'},
+        {j:[3,4],m:'IPA Terapan',r:'RK4'},
+        {j:[5,6,7],m:'Basis Data',r:'Lab RPL'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK4'},
+        {j:[3,4],m:'Projek Kreatif',r:'Lab RPL'},
+        {j:[5,6],m:'Matematika',r:'RK4'}
+      ],
+    },
+      "XII KJIJ 2" : {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4],m:'Dasar Pemrograman',r:'Lab RPL'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK4'},
+        {j:[7,8],m:'Sistem Komputer',r:'Lab RPL'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK4'},
+        {j:[3,4,5],m:'Algoritma & Pemrograman',r:'Lab RPL'},
+        {j:[6,7],m:'Agama',r:'RK4'},
+        {j:[8],m:'BK',r:'RK4'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4,5],m:'Pemrograman Web Dasar',r:'Lab RPL'},
+        {j:[6,7],m:'Seni Budaya',r:'RK4'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK4'},
+        {j:[3,4],m:'IPA Terapan',r:'RK4'},
+        {j:[5,6,7],m:'Basis Data',r:'Lab RPL'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK4'},
+        {j:[3,4],m:'Projek Kreatif',r:'Lab RPL'},
+        {j:[5,6],m:'Matematika',r:'RK4'}
+      ],
+    }
+  }
+    },
+
+  TKP : {
+    "X TKP 1" : {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4],m:'Dasar Pemrograman',r:'Lab RPL'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK4'},
+        {j:[7,8],m:'Sistem Komputer',r:'Lab RPL'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK4'},
+        {j:[3,4,5],m:'Algoritma & Pemrograman',r:'Lab RPL'},
+        {j:[6,7],m:'Agama',r:'RK4'},
+        {j:[8],m:'BK',r:'RK4'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4,5],m:'Pemrograman Web Dasar',r:'Lab RPL'},
+        {j:[6,7],m:'Seni Budaya',r:'RK4'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK4'},
+        {j:[3,4],m:'IPA Terapan',r:'RK4'},
+        {j:[5,6,7],m:'Basis Data',r:'Lab RPL'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK4'},
+        {j:[3,4],m:'Projek Kreatif',r:'Lab RPL'},
+        {j:[5,6],m:'Matematika',r:'RK4'}
+      ],
+    },
+    "X TKP 2": {
+     Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4],m:'Dasar Pemrograman',r:'Lab RPL'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK4'},
+        {j:[7,8],m:'Sistem Komputer',r:'Lab RPL'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK4'},
+        {j:[3,4,5],m:'Algoritma & Pemrograman',r:'Lab RPL'},
+        {j:[6,7],m:'Agama',r:'RK4'},
+        {j:[8],m:'BK',r:'RK4'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4,5],m:'Pemrograman Web Dasar',r:'Lab RPL'},
+        {j:[6,7],m:'Seni Budaya',r:'RK4'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK4'},
+        {j:[3,4],m:'IPA Terapan',r:'RK4'},
+        {j:[5,6,7],m:'Basis Data',r:'Lab RPL'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK4'},
+        {j:[3,4],m:'Projek Kreatif',r:'Lab RPL'},
+        {j:[5,6],m:'Matematika',r:'RK4'}
+      ],
+    },
+    "XI KGS 1": {
+     Senin:  [
+      {j:[1,2],m:'Matematika',r:'RK4'},
+      {j:[3,4],m:'Dasar Pemrograman',r:'Lab RPL'},
+      {j:[5,6],m:'Bahasa Inggris',r:'RK4'},
+      {j:[7,8],m:'Sistem Komputer',r:'Lab RPL'}
+    ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK4'},
+        {j:[3,4,5],m:'Algoritma & Pemrograman',r:'Lab RPL'},
+        {j:[6,7],m:'Agama',r:'RK4'},
+        {j:[8],m:'BK',r:'RK4'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4,5],m:'Pemrograman Web Dasar',r:'Lab RPL'},
+        {j:[6,7],m:'Seni Budaya',r:'RK4'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK4'},
+        {j:[3,4],m:'IPA Terapan',r:'RK4'},
+        {j:[5,6,7],m:'Basis Data',r:'Lab RPL'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK4'},
+        {j:[3,4],m:'Projek Kreatif',r:'Lab RPL'},
+        {j:[5,6],m:'Matematika',r:'RK4'}
+      ],
+    },
+    "XI KGS 2": {
+     Senin:  [
+      {j:[1,2],m:'Matematika',r:'RK4'},
+      {j:[3,4],m:'Dasar Pemrograman',r:'Lab RPL'},
+      {j:[5,6],m:'Bahasa Inggris',r:'RK4'},
+      {j:[7,8],m:'Sistem Komputer',r:'Lab RPL'}
+    ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK4'},
+        {j:[3,4,5],m:'Algoritma & Pemrograman',r:'Lab RPL'},
+        {j:[6,7],m:'Agama',r:'RK4'},
+        {j:[8],m:'BK',r:'RK4'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4,5],m:'Pemrograman Web Dasar',r:'Lab RPL'},
+        {j:[6,7],m:'Seni Budaya',r:'RK4'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK4'},
+        {j:[3,4],m:'IPA Terapan',r:'RK4'},
+        {j:[5,6,7],m:'Basis Data',r:'Lab RPL'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK4'},
+        {j:[3,4],m:'Projek Kreatif',r:'Lab RPL'},
+        {j:[5,6],m:'Matematika',r:'RK4'}
+      ],
+    },
+    "XII KGS 1": {
+     Senin:  [
+      {j:[1,2],m:'Matematika',r:'RK4'},
+      {j:[3,4],m:'Dasar Pemrograman',r:'Lab RPL'},
+      {j:[5,6],m:'Bahasa Inggris',r:'RK4'},
+      {j:[7,8],m:'Sistem Komputer',r:'Lab RPL'}
+    ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK4'},
+        {j:[3,4,5],m:'Algoritma & Pemrograman',r:'Lab RPL'},
+        {j:[6,7],m:'Agama',r:'RK4'},
+        {j:[8],m:'BK',r:'RK4'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4,5],m:'Pemrograman Web Dasar',r:'Lab RPL'},
+        {j:[6,7],m:'Seni Budaya',r:'RK4'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK4'},
+        {j:[3,4],m:'IPA Terapan',r:'RK4'},
+        {j:[5,6,7],m:'Basis Data',r:'Lab RPL'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK4'},
+        {j:[3,4],m:'Projek Kreatif',r:'Lab RPL'},
+        {j:[5,6],m:'Matematika',r:'RK4'}
+      ],
+    },
+    "XII KGS 2": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4],m:'Dasar Pemrograman',r:'Lab RPL'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK4'},
+        {j:[7,8],m:'Sistem Komputer',r:'Lab RPL'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK4'},
+        {j:[3,4,5],m:'Algoritma & Pemrograman',r:'Lab RPL'},
+        {j:[6,7],m:'Agama',r:'RK4'},
+        {j:[8],m:'BK',r:'RK4'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4,5],m:'Pemrograman Web Dasar',r:'Lab RPL'},
+        {j:[6,7],m:'Seni Budaya',r:'RK4'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK4'},
+        {j:[3,4],m:'IPA Terapan',r:'RK4'},
+        {j:[5,6,7],m:'Basis Data',r:'Lab RPL'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK4'},
+        {j:[3,4],m:'Projek Kreatif',r:'Lab RPL'},
+        {j:[5,6],m:'Matematika',r:'RK4'}
+      ],
+    },
+  },
+  TKL : {
+    "X TKL 1": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4],m:'Dasar Pemrograman',r:'Lab RPL'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK4'},
+        {j:[7,8],m:'Sistem Komputer',r:'Lab RPL'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK4'},
+        {j:[3,4,5],m:'Algoritma & Pemrograman',r:'Lab RPL'},
+        {j:[6,7],m:'Agama',r:'RK4'},
+        {j:[8],m:'BK',r:'RK4'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4,5],m:'Pemrograman Web Dasar',r:'Lab RPL'},
+        {j:[6,7],m:'Seni Budaya',r:'RK4'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK4'},
+        {j:[3,4],m:'IPA Terapan',r:'RK4'},
+        {j:[5,6,7],m:'Basis Data',r:'Lab RPL'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK4'},
+        {j:[3,4],m:'Projek Kreatif',r:'Lab RPL'},
+        {j:[5,6],m:'Matematika',r:'RK4'}
+      ],
+    "X TKL 2": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4],m:'Dasar Pemrograman',r:'Lab RPL'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK4'},
+        {j:[7,8],m:'Sistem Komputer',r:'Lab RPL'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK4'},
+        {j:[3,4,5],m:'Algoritma & Pemrograman',r:'Lab RPL'},
+        {j:[6,7],m:'Agama',r:'RK4'},
+        {j:[8],m:'BK',r:'RK4'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4,5],m:'Pemrograman Web Dasar',r:'Lab RPL'},
+        {j:[6,7],m:'Seni Budaya',r:'RK4'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK4'},
+        {j:[3,4],m:'IPA Terapan',r:'RK4'},
+        {j:[5,6,7],m:'Basis Data',r:'Lab RPL'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK4'},
+        {j:[3,4],m:'Projek Kreatif',r:'Lab RPL'},
+        {j:[5,6],m:'Matematika',r:'RK4'}
+      ],
+    "XI TITL 1": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4],m:'Dasar Pemrograman',r:'Lab RPL'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK4'},
+        {j:[7,8],m:'Sistem Komputer',r:'Lab RPL'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK4'},
+        {j:[3,4,5],m:'Algoritma & Pemrograman',r:'Lab RPL'},
+        {j:[6,7],m:'Agama',r:'RK4'},
+        {j:[8],m:'BK',r:'RK4'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4,5],m:'Pemrograman Web Dasar',r:'Lab RPL'},
+        {j:[6,7],m:'Seni Budaya',r:'RK4'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK4'},
+        {j:[3,4],m:'IPA Terapan',r:'RK4'},
+        {j:[5,6,7],m:'Basis Data',r:'Lab RPL'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [{j:[1,2],m:'PKN',r:'RK4'},{j:[3,4],m:'Projek Kreatif',r:'Lab RPL'},{j:[5,6],m:'Matematika',r:'RK4'}],
+    },
+    "XI TITL 2": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4],m:'Dasar Pemrograman',r:'Lab RPL'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK4'},
+        {j:[7,8],m:'Sistem Komputer',r:'Lab RPL'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK4'},
+        {j:[3,4,5],m:'Algoritma & Pemrograman',r:'Lab RPL'},
+        {j:[6,7],m:'Agama',r:'RK4'},
+        {j:[8],m:'BK',r:'RK4'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4,5],m:'Pemrograman Web Dasar',r:'Lab RPL'},
+        {j:[6,7],m:'Seni Budaya',r:'RK4'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK4'},
+        {j:[3,4],m:'IPA Terapan',r:'RK4'},
+        {j:[5,6,7],m:'Basis Data',r:'Lab RPL'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK4'},
+        {j:[3,4],m:'Projek Kreatif',r:'Lab RPL'},
+        {j:[5,6],m:'Matematika',r:'RK4'}
+      ],
+    },
+    "XII TITL 1": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4],m:'Dasar Pemrograman',r:'Lab RPL'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK4'},
+        {j:[7,8],m:'Sistem Komputer',r:'Lab RPL'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK4'},
+        {j:[3,4,5],m:'Algoritma & Pemrograman',r:'Lab RPL'},
+        {j:[6,7],m:'Agama',r:'RK4'},
+        {j:[8],m:'BK',r:'RK4'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4,5],m:'Pemrograman Web Dasar',r:'Lab RPL'},
+        {j:[6,7],m:'Seni Budaya',r:'RK4'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK4'},
+        {j:[3,4],m:'IPA Terapan',r:'RK4'},
+        {j:[5,6,7],m:'Basis Data',r:'Lab RPL'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK4'},
+        {j:[3,4],m:'Projek Kreatif',r:'Lab RPL'},
+        {j:[5,6],m:'Matematika',r:'RK4'}
+      ],
+    },
+    "XII TITL 2": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4],m:'Dasar Pemrograman',r:'Lab RPL'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK4'},
+        {j:[7,8],m:'Sistem Komputer',r:'Lab RPL'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK4'},
+        {j:[3,4,5],m:'Algoritma & Pemrograman',r:'Lab RPL'},
+        {j:[6,7],m:'Agama',r:'RK4'},
+        {j:[8],m:'BK',r:'RK4'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK4'},
+        {j:[3,4,5],m:'Pemrograman Web Dasar',r:'Lab RPL'},
+        {j:[6,7],m:'Seni Budaya',r:'RK4'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK4'},
+        {j:[3,4],m:'IPA Terapan',r:'RK4'},
+        {j:[5,6,7],m:'Basis Data',r:'Lab RPL'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK4'},
+        {j:[3,4],m:'Projek Kreatif',r:'Lab RPL'},
+        {j:[5,6],m:'Matematika',r:'RK4'}
+      ],
+    },
+  },
+  TE : {
+    "X TE 1" : {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+      {j:[1,2],m:'Matematika',r:'RK13'},
+      {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+      {j:[6,7],m:'Seni Budaya',r:'RK13'},{j:[8],m:'BK',r:'RK13'}
+    ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+    "X TE 2" : {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+    "X TE 3" : {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+    ],     Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+
+    },
+    "X TE 4" : {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+    "X TE 5" : {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+    "X TE 6" : {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+    "XI TEK 1": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+     "XI TEK 2": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+     "XI TEK 3": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+     "XI TME 1": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+     "XI TME 2": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+     "XI TME 3": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+    "XII TEK 1": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+    "XII TEK 2": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+    "XII TEK 3": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+    "XII TME 1": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+    "XII TME 2": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+    "XII TME 3": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    }
+  },
+  TO: {
+    "X TO 1": {
+     Senin:  [
+      {j:[1,2],m:'Matematika',r:'RK13'},
+      {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+      {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+      {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+     ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+    "X TO 2": {
+     Senin:  [
+      {j:[1,2],m:'Matematika',r:'RK13'},
+      {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+      {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+      {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+     ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+    "X TO 3": {
+     Senin:  [
+      {j:[1,2],m:'Matematika',r:'RK13'},
+      {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+      {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+      {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+     ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+    "XI TKR 1": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+    "XI TKR 2": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+    "XI TKR 3": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+    "XII TKR 1": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    },
+    "XII TKR 2": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bahasa Inggris',r:'RK13'},
+        {j:[3,4],m:'Ekonomi',r:'RK13'},
+        {j:[5,6,7],m:'Pelayanan Penjualan',r:'RK13'},
+        {j:[8],m:'PJOK',r:'Lapangan'}
+      ],
+      Jumat:  [
+        {j:[1,2],m:'PKN',r:'RK13'},
+        {j:[3,4],m:'Projek Kreatif',r:'RK13'},
+        {j:[5,6],m:'Matematika',r:'RK13'}
+      ],
+    }
+  },
+  TPFL: {
+    "X TPFL 1": {
+      Senin:  [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4],m:'Marketing Dasar',r:'RK13'},
+        {j:[5,6],m:'Bahasa Inggris',r:'RK13'},
+        {j:[7,8],m:'Bisnis Online',r:'Lab Komputer'}
+      ],
+      Selasa: [
+        {j:[1,2],m:'Bahasa Indonesia',r:'RK13'},
+        {j:[3,4,5],m:'Komunikasi Bisnis',r:'RK13'},
+        {j:[6,7],m:'Agama',r:'RK13'}
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Matematika',r:'RK13'},
+        {j:[3,4,5],m:'Pemasaran Digital',r:'Lab Komputer'},
+        {j:[6,7],m:'Seni Budaya',r:'RK13'},
+        {j:[8],m:'BK',r:'RK13'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bhs. Jawa',r:'R10',g:'DODO'},
+        {j:[3,4,5,6],m:'Bhs. Indonesia',r:'R10',g:'ASIH'},
+        {j:[7,8],m:'Seni Budaya',r:'R10',g:'ENY'},
+        {j:[9,10],m:'IPAS',r:'R10',g:'ROH'},
+      ],
+      Jumat:  [
+        {j:[1,2],m:'Matematika',r:'R10',g:'MANDA'},,
+        {j:[3,4],m:'IPAS',r:'R10',g:'ROH'},
+        {j:[5,6],m:'Bhs. Inggris',r:'R10',g:'CIN'},
+        {j:[7,8],m:'PKN',r:'R10',g:'TIARA'}
+      ],
+    },
+
+     "X TPFL 2": {
+      Senin:  [
+        {j:[1,2,3],m:'IPAS',r:'R10',g:'ROH'},
+        {j:[4,5],m:'Bhs. Jawa',r:'R10',g:'DODO'},
+        {j:[6,7],m:'Matematika',r:'MANDA'},
+        {j:[8,9,10],m:'PJOK',r:'R10',g:'BAM'}
+      ],
+      Selasa: [
+        {j:[1,2,3],m:'Agama',r:'R10',g:'ATIF'},
+        {j:[4,5],m:'Matematika',r:'R10',g:'MANDA'},
+        {j:[6,7,8],m:'IPAS',r:'R10',g:'ROH'},
+        {j:[9,10],m:'Bhs. Indonesia',r:'R10',g:'ASIH'},
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Bhs. Indonesia',r:'R10',g:'ASIH'},
+        {j:[3,4],m:'PKN',r:'Lab Komputer'},
+        {j:[5,6],m:'Sejarah',r:'R10',g:'MONA'},
+        {j:[7,8],m:'Bhs. Inggris',r:'R10',g:'CIN'},
+        {j:[9,10],m:'Seni Budaya',r:'R10',g:'ENY'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'Bhs. Inggris',r:'TPFL 06',g:'CIN'},
+        {j:[3,4,5,6,7,8],m:'KBM',r:'KBM',g:'SLAMET'},
+        {j:[9,10],m:'GT',r:'Gambar Mesin',g:'LILIK'},
+      ],
+      Jumat:  [
+        {j:[1,2,3,4],m:'GT',r:'Gambar Mesin',g:'LILIK'},
+        {j:[5],m:'BK',r:'TPFL 06',g:'SING'},
+        {j:[6],m:'KKA TPFL',r:'TPFL 06',g:'CHANDRA'},
+        {j:[7,8],m:'INFOR TPFL',r:'TPFL 06',g:'CHANDRA'},
+      ],
+    },
+
+    "XI TPFL 1": {
+      Senin:  [
+        {j:[1,2,3,4,5,6],m:'MK',r:'RPS TPFL Mesin 1',g:'GUNTUR'},
+        {j:[7,8],m:'FL',r:'Pengelasan',g:'CHANDRA'},
+        {j:[9,10],m:'Jer',r:'R9',g:'VAN'},
+      ],
+      Selasa: [
+        {j:[1,2],m:'Jer',r:'R9',g:'VAN'},
+        {j:[3,4,5,6],m:'KKK TFLM',r:'Pengelasan',g:'CHANDRA'},
+        {j:[7,8,9,10],m:'GTdP',r:'CADD'}
+      ],
+      Rabu:   [
+        {j:[1],m:'GTdP',r:'CADD',g:'ROZI'},
+        {j:[2,3,4],m:'KIK TFLM',r:'Gedung L',g:'SLAMET'},
+        {j:[5],m:'BK',r:'R11',g:'SING'},
+        {j:[6,7],m:'KIK',r:'R11',g:'YUL'},
+        {j:[8,9,10],m:'Bhs. Indonesia',r:'R11',g:'AYU'}
+      ],
+      Kamis:  [
+        {j:[1,2],m:'PJOK',r:'R11',g:'BAM'},
+        {j:[3,4],m:'Sejarah',r:'R11',g:'MONA'},
+        {j:[5,6],m:'Jawa',r:'R11',g:'DODO'},
+        {j:[7,8],m:'Bhs. Inggris',r:'R11',g:'CIN'},
+        {j:[9,10],m:'PKN',r:'R11',g:'TIARA'}
+      ],
+      Jumat:  [
+        {j:[1,2,3],m:'Agama',r:'R11',g:'YASIN'},
+        {j:[3,4,5,6],m:'Matematika',r:'R11',g:'MANDA'},
+        {j:[7,8],m:'Bhs. Inggris',r:'R11',g:'CIN'}
+      ],
+    },
+    "XI TFLM 2": {
+      Senin:  [
+        {j:[1,2,3],m:'Bhs. Indonesia',r:'R11',g:'AYU'},
+        {j:[4,5],m:'Bhs. Inggris',r:'R11',g:'CIN'},
+        {j:[6,7],m:'PKN',r:'R11',g:'CIN'},
+        {j:[8,9,10],m:'Agama',r:'R11',g:'YASIN'}
+      ],
+      Selasa: [
+        {j:[1,2,3],m:'KIK',r:'R11',g:'YUL'},
+        {j:[3,4],m:'Bhs. Jawa',r:'R11',g:'DODO'},
+        {j:[5,6],m:'Sejarah',r:'R11',g:'MONA'},
+        {j:[7,8],m:'Bhs. Inggris',r:'R11',g:'CIN'},
+        {j:[9,10],m:'PJOK',r:'R11',g:'BAM'},
+      ],
+      Rabu:   [
+        {j:[1,2,3],m:'Matematika',r:'R11',g:'MANDA'},
+        {j:[4],m:'BK',r:'R11',g:'SING'},
+        {j:[5,6,7,8,9],m:'GTdP',r:'CADD',g:'ROZI'},
+        {j:[10],m:'KIK TFLM',r:'Gambar Mesin',g:'LILIK'},
+      ],
+      Kamis:  [
+        {j:[1,2],m:'KIK TFLM',r:'Gambar Mesin',g:'LILIK'},
+        {j:[3,4,5,6,7,8],m:'MK RPS TPFL',r:'Mesin 1',g:'GUNTUR'},
+        {j:[9,10],m:'FL',r:'Pengelasan',g:'CHANDRA'},
+      ],
+      Jumat:  [
+        {j:[1,2,3,4],m:'KK TFLM',r:'Pengelasan',g:'CHANDRA'},
+        {j:[5,6,7,8],m:'Jpn',r:'R9',g:'KIKI'},
+      ],
+    },
+    "XII TFLM 1": {
+     Senin:  [
+      {j:[1,2],m:'Bhs. Inggris',r:'R12',g:'HURI'},
+      {j:[3,4],m:'PKN',r:'R12',g:'SAID'},
+      {j:[5,6],m:'Sejarah',r:'R12',g:'MONA'},
+      {j:[7],m:'BK',r:'R12',g:'SING'},
+      {j:[8,9,10],m:'Agama',r:'R12',g:'MOZA'},
+     ],
+      Selasa: [
+        {j:[1,2],m:'Matematika',r:'R12',g:'HURI'},
+        {j:[3,4,5,6],m:'Bhs. Indonesia',r:'R12',g:'KISMI'},
+        {j:[7,8],m:'Bhs. Inggris',r:'R12',g:'HURI'},
+        {j:[9,10],m:'PJOK',r:'R12',g:'GIO'},
+        
+      ],
+      Rabu:   [
+        {j:[1,2,3,4,5,6,7],m:'PNK',r:'CNC-CAM',g:'KOMAR'},
+        {j:[8,9,10],m:'KIK TFLM',r:'Gedung L',g:'CHANDRA'},
+      ],
+      Kamis:  [
+        {j:[1,2],m:'KIK TFLM',r:'RGedung L',g:'CHANDRA'},
+        {j:[3,4,5,6,7],m:'PNK',r:'CNC-CAM',g:'KOMAR'},
+        {j:[8,9,10],m:'GTdP',r:'CADD',g:'ROZI'},
+      ],
+      Jumat:  [
+        {j:[1,2,3,4],m:'GTdP',r:'CADD',g:'ROZI'},
+        {j:[5,6,7,8],m:'MAPIL TFLM',r:'Kelistrikan',g:'SLAMET'},
+      ],
+    },
+    "XII TFLM 2": {
+      Senin:  [
+        {j:[1,2,3,4,5,6],m:'PNK',r:'CNC-CAM',g:'KOMAR'},
+        {j:[7,8],m:'GTdP',r:'CADD',g:'ROZI'},
+        {j:[9,10],m:'MAPIL TFLM',r:'Pneumatik',g:'SLAMET'},
+      ],
+      Selasa: [
+        {j:[1,2],m:'MAPIL TFLM',r:'Hidrolik',g:'SLAMET'},
+        {j:[3,4,5],m:'GTdP',r:'CADD',g:'ROZI'},
+        {j:[6,7],m:'KIK TFLM',r:'Gedung L',g:'CHANDRA'},
+      ],
+      Rabu:   [
+        {j:[1,2],m:'Bhs. Inggris',r:'R12',g:'HURI'},
+        {j:[3,4],m:'Sejarah',r:'R12',g:'MONA'},
+        {j:[5,6,7],m:'Matematika',r:'R12',g:'MANDA'},
+        {j:[8,9,10],m:'Agama',r:'R12',g:'MOZA'},
+      ],
+      Kamis:  [
+        {j:[1,2],m:'PJOK',r:'R12',g:'DES'},
+        {j:[3,4],m:'Bhs. Inggris',r:'R12',g:'HURI'},
+        {j:[5,6],m:'PKN',r:'R12',g:'SAID'},
+        {j:[7],m:'KIK TFLM',r:'Gedung L',g:'CHANDRA'},
+        {j:[8,9,10],m:'PNK',r:'CNC-CAM',g:'KOMAR'},
+      ],
+      Jumat:  [
+        {j:[1,2,3,4],m:'PNK',r:'CNC-CAM',g:'KOMAR'},
+        {j:[5,6,7],m:'Bhs. Indonesia',r:'R12',g:'KISMI'},
+        {j:[8],m:'BK',r:'R12',g:'SING'}
+      ],
+    },
+}
+    }
+}
+}
+const DAYS = ['Senin','Selasa','Rabu','Kamis','Jumat'];
+const DAYS_EN = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
+const DAYS_ID = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat'];
+
+// ─── STATE ───
+let currentUser = null;
+let reminders = [];
+let selectedDay = null;
+let notifInterval = null;
+
+// ─── LOGIN ───
+function doLogin() {
+  const nama    = (document.getElementById('inp-nama').value || '').trim();
+  const nis     = (document.getElementById('inp-nis').value  || '').trim();
+  const kelas   = document.getElementById('inp-kelas').value   || '';
+  const jurusan = document.getElementById('inp-jurusan').value || '';
+
+  if (!nama)    { alert('Mohon isi Nama Lengkap');      return; }
+  if (!nis)     { alert('Mohon isi NIS');               return; }
+  if (!kelas)   { alert('Mohon pilih Kelas');           return; }
+  if (!jurusan) { alert('Mohon pilih Jurusan');         return; }
+
+  currentUser = { nama, nis, kelas, jurusan };
+  savedReminders();
+  initApp();
+}
+
+function doLogout() {
+  currentUser = null;
+  document.getElementById('screen-login').classList.add('active');
+  document.getElementById('screen-app').classList.remove('active');
+  clearInterval(notifInterval);
+}
+
+// ─── INIT APP ───
+function initApp() {
+  try {
+    document.getElementById('screen-login').classList.remove('active');
+    document.getElementById('screen-app').classList.add('active');
+
+    // Display user
+    document.getElementById('disp-name').textContent = currentUser.nama;
+    document.getElementById('disp-class').textContent = `Kelas ${currentUser.kelas} — ${currentUser.jurusan}`;
+    document.getElementById('user-avatar').textContent = currentUser.nama.charAt(0).toUpperCase();
+
+    // Build day selector
+    buildDaySelector();
+    // Set today
+    const todayIndex = new Date().getDay();
+    const todayName = DAYS_ID[todayIndex];
+    const dayToSelect = DAYS.includes(todayName) ? todayName : 'Senin';
+    selectDay(dayToSelect);
+
+    // Build week view
+    buildWeekGrid();
+
+    // Load reminders
+    loadReminders();
+    renderReminders();
+
+    // Check notification
+    checkNotifPermission();
+
+    // Start reminder checker
+    clearInterval(notifInterval);
+    notifInterval = setInterval(checkReminders, 30000);
+
+    showToast('👋', `Selamat Datang!`, `Halo, ${currentUser.nama.split(' ')[0]}!`);
+  } catch(e) {
+    alert('Error saat masuk: ' + e.message);
+    console.error(e);
+  }
+}
+
+// ─── HELPER: get schedule for current user ───
+function getUserSchedule(day) {
+  // Cari jadwal berdasarkan nama kelas di semua jurusan
+  for (const jurusan in JADWAL) {
+    const kelasData = JADWAL[jurusan][currentUser.kelas];
+    if (kelasData) {
+      return kelasData[day] || [];
+    }
+  }
+  return [];
+}
+
+// ─── EXPAND SCHEDULE ITEMS ───
+function expandSchedule(items) {
+  const result = [];
+  items.forEach(item => {
+    const jNums = item.j;
+    const start = JAM[jNums[0]].s;
+    const end   = JAM[jNums[jNums.length-1]].e;
+    result.push({ ...item, start, end });
+  });
+  return result;
+}
+
+// ─── BUILD DAY SELECTOR ───
+function buildDaySelector() {
+  const container = document.getElementById('day-selector');
+  container.innerHTML = '';
+  DAYS.forEach(d => {
+    const btn = document.createElement('button');
+    btn.className = 'day-pill';
+    btn.textContent = d;
+    btn.dataset.day = d;
+    btn.onclick = () => selectDay(d);
+    container.appendChild(btn);
+  });
+}
+
+function selectDay(day) {
+  selectedDay = day;
+  // Update pills
+  document.querySelectorAll('.day-pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.day === day);
+  });
+  renderTodaySchedule(day);
+}
+
+// ─── RENDER TODAY SCHEDULE ───
+function renderTodaySchedule(day) {
+  const items = expandSchedule(getUserSchedule(day));
+  const now = new Date();
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+
+  // Banner
+  const dayNames = { Senin:'Senin', Selasa:'Selasa', Rabu:'Rabu', Kamis:'Kamis', Jumat:'Jumat', Sabtu:'Sabtu' };
+  document.getElementById('banner-day').textContent = day;
+  document.getElementById('banner-date').textContent = formatDateID(now);
+  document.getElementById('banner-count').textContent = items.length;
+
+  const list = document.getElementById('today-list');
+  list.innerHTML = '';
+
+  if (items.length === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="emoji">🎉</div><p>Tidak ada jadwal pelajaran hari ini</p></div>`;
+    return;
+  }
+
+  // Check if this is today
+  const todayName = DAYS_ID[now.getDay()];
+  const isToday = day === todayName;
+
+  items.forEach(item => {
+    const [sh, sm] = item.start.split(':').map(Number);
+    const [eh, em] = item.end.split(':').map(Number);
+    const startMin = sh * 60 + sm;
+    const endMin   = eh * 60 + em;
+
+    let status = 'upcoming';
+    if (isToday) {
+      if (nowMin >= startMin && nowMin < endMin) status = 'ongoing';
+      else if (nowMin >= endMin) status = 'done';
+      else if (startMin - nowMin <= 30) status = 'next';
+    }
+
+    const card = document.createElement('div');
+    card.className = `schedule-card ${status === 'ongoing' ? 'active-class' : status === 'done' ? 'done' : ''}`;
+
+    let badgeHTML = '';
+    if (status === 'ongoing') badgeHTML = `<div class="scard-badge badge-ongoing">Sedang Berlangsung</div>`;
+    else if (status === 'next') badgeHTML = `<div class="scard-badge badge-next">Berikutnya</div>`;
+    else if (status === 'done') badgeHTML = `<div class="scard-badge badge-done">Selesai</div>`;
+
+    card.innerHTML = `
+      <div class="scard-time-block">
+        <div class="scard-start">${item.start}</div>
+        <div class="scard-end">${item.end}</div>
+      </div>
+      <div class="scard-divider"></div>
+      <div class="scard-body">
+        <div class="scard-subject">${item.m}</div>
+        <div class="scard-meta"><span>🏫 ${item.r}</span>${item.g ? `<span>👤 ${item.g}</span>` : ''}</div>
+      </div>
+      ${badgeHTML}
+    `;
+    list.appendChild(card);
+  });
+}
+
+// ─── BUILD WEEK GRID ───
+function buildWeekGrid() {
+  const grid = document.getElementById('week-grid');
+  grid.innerHTML = '';
+  const todayName = DAYS_ID[new Date().getDay()];
+
+  DAYS.forEach(day => {
+    const items = expandSchedule(getUserSchedule(day));
+    const isToday = day === todayName;
+
+    const card = document.createElement('div');
+    card.className = 'day-card';
+
+    const header = document.createElement('div');
+    header.className = `day-card-header ${isToday ? 'today-header' : ''}`;
+    header.innerHTML = `
+      <span class="day-name">${day}${isToday ? ' ★ Hari Ini' : ''}</span>
+      <span class="lesson-badge">${items.length} pelajaran</span>
+    `;
+    header.onclick = () => {
+      const body = card.querySelector('.day-card-body');
+      body.style.display = body.style.display === 'none' ? '' : 'none';
+    };
+
+    const body = document.createElement('div');
+    body.className = 'day-card-body';
+    if (!isToday) body.style.display = 'none';
+
+    if (items.length > 0) {
+      const mini = document.createElement('div');
+      mini.className = 'mini-schedule';
+      items.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'mini-row';
+        row.innerHTML = `
+          <div class="mini-time">${item.start}–${item.end}</div>
+          <div class="mini-subject">${item.m}</div>
+          <div class="mini-room">${item.r}</div>
+        `;
+        mini.appendChild(row);
+      });
+      body.appendChild(mini);
+    } else {
+      body.innerHTML = '<p style="padding:12px 0;color:var(--gray-400);font-size:13px;">Tidak ada pelajaran</p>';
+    }
+
+    card.appendChild(header);
+    card.appendChild(body);
+    grid.appendChild(card);
+  });
+}
+
+// ─── REMINDERS ───
+function savedReminders() {
+  const key = `smkn7_rem_${currentUser.nis}`;
+  try {
+    const stored = localStorage.getItem(key);
+    reminders = stored ? JSON.parse(stored) : [];
+  } catch { reminders = []; }
+}
+
+function saveReminders() {
+  const key = `smkn7_rem_${currentUser.nis}`;
+  try { localStorage.setItem(key, JSON.stringify(reminders)); } catch {}
+}
+
+function loadReminders() { savedReminders(); }
+
+function addReminder() {
+  const title = document.getElementById('rem-title').value.trim();
+  const type  = document.getElementById('rem-type').value;
+  const date  = document.getElementById('rem-date').value;
+  const time  = document.getElementById('rem-time').value;
+  const desc  = document.getElementById('rem-desc').value.trim();
+
+  if (!title || !date || !time) {
+    showToast('⚠️','Lengkapi Data','Judul, tanggal, dan waktu wajib diisi');
+    return;
+  }
+
+  const rem = {
+    id: Date.now(),
+    title, type, date, time, desc,
+    notified: false
+  };
+  reminders.unshift(rem);
+  saveReminders();
+  renderReminders();
+
+  // Clear fields
+  document.getElementById('rem-title').value = '';
+  document.getElementById('rem-date').value = '';
+  document.getElementById('rem-time').value = '';
+  document.getElementById('rem-desc').value = '';
+
+  showToast('✅','Pengingat Disimpan',`"${title}" pada ${formatDateShort(date)} ${time}`);
+}
+
+function deleteReminder(id) {
+  reminders = reminders.filter(r => r.id !== id);
+  saveReminders();
+  renderReminders();
+}
+
+function renderReminders() {
+  const list = document.getElementById('reminders-list');
+  list.innerHTML = '';
+
+  if (reminders.length === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="emoji">🔕</div><p>Belum ada pengingat. Tambahkan di atas!</p></div>`;
+    return;
+  }
+
+  const icons = { pelajaran:'📚', tugas:'📝', ujian:'🎯', lainnya:'🔖' };
+  const iconClass = { pelajaran:'icon-pelajaran', tugas:'icon-tugas', ujian:'icon-ujian', lainnya:'icon-lainnya' };
+
+  reminders.forEach(rem => {
+    const card = document.createElement('div');
+    card.className = 'reminder-card';
+    const isPast = new Date(`${rem.date}T${rem.time}`) < new Date();
+    card.style.opacity = isPast ? '0.6' : '1';
+
+    card.innerHTML = `
+      <div class="reminder-icon ${iconClass[rem.type]}">${icons[rem.type]}</div>
+      <div class="reminder-body">
+        <div class="reminder-title">${rem.title}</div>
+        ${rem.desc ? `<div class="reminder-desc">${rem.desc}</div>` : ''}
+        <div class="reminder-time-badge">🕐 ${formatDateShort(rem.date)} · ${rem.time}${isPast ? ' · Sudah lewat' : ''}</div>
+      </div>
+      <button class="btn-delete-reminder" onclick="deleteReminder(${rem.id})" title="Hapus">✕</button>
+    `;
+    list.appendChild(card);
+  });
+}
+
+// ─── NOTIFICATION ───
+function checkNotifPermission() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission === 'default') {
+    document.getElementById('notif-banner').style.display = 'flex';
+  }
+}
+
+function requestNotifPermission() {
+  if (!('Notification' in window)) {
+    showToast('❌','Tidak Didukung','Browser ini tidak mendukung notifikasi');
+    return;
+  }
+  Notification.requestPermission().then(perm => {
+    if (perm === 'granted') {
+      document.getElementById('notif-banner').style.display = 'none';
+      showToast('🔔','Notifikasi Aktif','Kamu akan mendapat pengingat otomatis!');
+    } else {
+      showToast('⚠️','Ditolak','Aktifkan notifikasi di pengaturan browser');
+    }
+  });
+}
+
+function checkReminders() {
+  const now = new Date();
+  reminders.forEach(rem => {
+    if (rem.notified) return;
+    const remDate = new Date(`${rem.date}T${rem.time}`);
+    const diffMs = remDate - now;
+    // Fire if within 1 minute window
+    if (diffMs >= 0 && diffMs <= 60000) {
+      rem.notified = true;
+      saveReminders();
+      fireNotification(rem);
+    }
+  });
+}
+
+function fireNotification(rem) {
+  const icons = { pelajaran:'📚', tugas:'📝', ujian:'🎯', lainnya:'🔖' };
+  const icon = icons[rem.type] || '🔔';
+
+  showToast(icon, rem.title, rem.desc || `Pengingat: ${rem.time}`);
+
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification(`${icon} ${rem.title}`, {
+      body: rem.desc || `Pengingat jadwal SMKN 7 Semarang`,
+      icon: '',
+      tag: `smkn7_${rem.id}`
+    });
+  }
+}
+
+// ─── TOAST ───
+function showToast(icon, title, body) {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `
+    <div class="toast-icon">${icon}</div>
+    <div class="toast-text">
+      <div class="toast-title">${title}</div>
+      <div class="toast-body">${body}</div>
+    </div>
+  `;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add('hide');
+    setTimeout(() => toast.remove(), 300);
+  }, 4000);
+}
+
+// ─── TABS ───
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ─── UTILS ───
+function formatDateID(d) {
+  return d.toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
+}
+function formatDateShort(str) {
+  const d = new Date(str + 'T00:00:00');
+  return d.toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+}
+
+// ─── INIT ───
+// Set default date for reminder input
+document.addEventListener('DOMContentLoaded', () => {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('rem-date').value = today;
+});
+</script>
+</body>
+</html>
